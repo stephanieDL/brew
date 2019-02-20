@@ -60,15 +60,11 @@ module Homebrew
     install_bundler!
 
     ENV["BUNDLE_GEMFILE"] = "#{ENV["HOMEBREW_LIBRARY"]}/Homebrew/test/Gemfile"
-    @bundler_checked ||= 0
-    puts "Checking bundler... (#{@bundler_checked})"
-    if system("#{Gem.bindir}/bundle check &>/dev/null")
-      puts "Checking bundler passed!"
-    else
-      puts "Checking bundler failed!"
+    bundle_check_output = `#{Gem.bindir}/bundle check`
+    bundle_check_failed = !$CHILD_STATUS.exitstatus.zero?
+    if bundle_check_failed || bundle_check_output.include?("Install missing gems")
       system "#{Gem.bindir}/bundle", "install"
     end
-    @bundler_checked += 1
 
     setup_gem_environment!
   end
