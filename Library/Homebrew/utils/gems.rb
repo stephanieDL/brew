@@ -60,8 +60,16 @@ module Homebrew
     install_bundler!
 
     ENV["BUNDLE_GEMFILE"] = "#{ENV["HOMEBREW_LIBRARY"]}/Homebrew/test/Gemfile"
-    # TODO: attempt cache
-    system "#{Gem.bindir}/bundle", "install" unless system("#{Gem.bindir}/bundle check &>/dev/null")
+    @bundler_checked ||= 0
+    puts "Checking bundler... (#{@bundler_checked})"
+    if system("#{Gem.bindir}/bundle check &>/dev/null")
+      puts "Checking bundler passed!"
+      system "#{Gem.bindir}/bundle", "install"
+    else
+      puts "Checking bundler failed!"
+      system "#{Gem.bindir}/bundle", "install"
+    end
+    @bundler_checked += 1
 
     setup_gem_environment!
   end
