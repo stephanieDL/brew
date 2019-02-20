@@ -64,7 +64,6 @@ module Homebrew
     puts "Checking bundler... (#{@bundler_checked})"
     if system("#{Gem.bindir}/bundle check &>/dev/null")
       puts "Checking bundler passed!"
-      system "#{Gem.bindir}/bundle", "install"
     else
       puts "Checking bundler failed!"
       system "#{Gem.bindir}/bundle", "install"
